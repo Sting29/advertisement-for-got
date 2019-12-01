@@ -1,14 +1,26 @@
-import React from 'react';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { adDispatcher } from 'ubimo-ad-dispatcher';
 
-function App() {
-  return (
-    <div className="App">
+import MapWithAd from "./components/MapWithAd";
+import LogAds from "./components/LogAds";
 
-          Learn React
+import './app.css';
 
-    </div>
-  );
-}
+const App = () => {
+    const [ adEvent, setAdEvent ] = useState(undefined);
+
+    useEffect(() => {
+        adDispatcher.registerToAdEvents((adE) => {
+            setAdEvent({ ...adE, timestamp: Date.now() })
+        });
+    }, []);
+
+    return (
+        <div className="app">
+            <LogAds adEvent={adEvent} />
+            <MapWithAd adEvent={adEvent} />
+        </div>
+    );
+};
 
 export default App;
